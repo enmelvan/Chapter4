@@ -1,0 +1,6 @@
+#OTU ID	1	2	3
+Actinobacteria	1645	617	360
+Bacteroidetes	10	1450	3453
+Firmicutes	7525	7764	8194
+Proteobacteria	2	59	74
+Tenericutes	56	107	34
