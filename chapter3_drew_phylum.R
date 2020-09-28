@@ -113,7 +113,37 @@ mySubset_rand <- taxon_rel_rand@otu_table@.Data[,colnames(taxon_rel_rand@otu_tab
 obese.fit <- func.EM(mySubset,mySubset_rand,max.iter = 1e3,epsilon=1e-2)
 diagnoseFit(obese.fit, mySubset, annotate = TRUE) # R^2 > 0.996
 showInteraction(obese.fit,mySubset)
-diagnoseBiomass(obese.fit)                             # convergence looks good
+diagnoseBiomass2(obese.fit)                             # convergence looks good
 hist(beem2biomass(obese.fit))
+
+
+# modified diagnose biomass function
+diagnoseBiomass2 <- function (beem.out, true.biomass = NA, alpha = 0.1, ...) 
+{
+  trace.m <- beem.out$trace.m
+  nIter <- ncol(trace.m)
+  if (any(is.na(true.biomass))) {
+    true.m <- trace.m[, nIter]
+  }
+  else {
+    true.m <- true.biomass
+  }
+  rel.err.m <- (t((trace.m - true.m)/true.m)) * 100
+  col <- rep(rgb(0, 0, 0, alpha), nrow(trace.m))
+  col[beem.out$sample2rm] <- rgb(1, 1, 0, alpha)
+  matplot(rel.err.m[floor(nIter/2):nIter], type = "l", xlab = "Iterations", ylab = "Relative difference (%)", 
+          main = "Biomass trace", lty = 1, lwd = 3, col = col, 
+          ...)
+  lines(x = 1:ncol(trace.m), y = apply(rel.err.m, 1, median), 
+        col = "red", lwd = 5)
+}
+diagnoseBiomass2(lean.fit)
+diagnoseBiomass2(obese.fit)
+
+
+
+
+
+
 
 
